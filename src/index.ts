@@ -1,7 +1,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import { getRecommendations, type RecommendationRequest } from "./recommendations.js";
+import { getRecommendations, isTripStyle, type RecommendationRequest } from "./recommendations.js";
 
 dotenv.config();
 
@@ -27,6 +27,14 @@ app.post("/api/recommendations", (request, response) => {
     response.status(400).json({
       error: "destination is required",
       message: "Provide a destination string to receive static demo recommendations."
+    });
+    return;
+  }
+
+  if (body.tripStyle !== undefined && !isTripStyle(body.tripStyle)) {
+    response.status(400).json({
+      error: "tripStyle is invalid",
+      message: "Provide tripStyle as relaxed, balanced, or packed."
     });
     return;
   }
